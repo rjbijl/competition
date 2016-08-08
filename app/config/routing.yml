@@ -1,0 +1,4 @@
+competition:
+    resource: "@CompetitionBundle/Resources/config/routing.xml"
+    prefix:   /
+

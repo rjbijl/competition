@@ -119,11 +119,16 @@ class Match
      * @param Player $homePlayer
      * @return self
      */
-    public function setHomePlayer(Player $homePlayer)
+    public function setHomePlayer(Player $homePlayer = null)
     {
         if ($this->homePlayer !== $homePlayer) {
             $this->homePlayer = $homePlayer;
-            $homePlayer->addMatch($this);
+
+            if (null === $homePlayer) {
+                $homePlayer->removeHomeMatch($this);
+            } else {
+                $homePlayer->addHomeMatch($this);
+            }
         };
 
         return $this;
@@ -145,11 +150,16 @@ class Match
      * @param Player $awayPlayer
      * @return self
      */
-    public function setAwayPlayer(Player $awayPlayer)
+    public function setAwayPlayer(Player $awayPlayer = null)
     {
         if ($this->awayPlayer !== $awayPlayer) {
             $this->awayPlayer = $awayPlayer;
-            $awayPlayer->addMatch($this);
+
+            if (null === $awayPlayer) {
+                $awayPlayer->removeAwayMatch($this);
+            } else {
+                $awayPlayer->addAwayMatch($this);
+            }
         };
 
         return $this;

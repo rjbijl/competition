@@ -85,4 +85,112 @@ class Player
         $this->name = $name;
         return $this;
     }
+
+    /**
+     * Getter for homeMatches
+     *
+     * @return ArrayCollection
+     */
+    public function getHomeMatches()
+    {
+        return $this->homeMatches;
+    }
+
+    /**
+     * Setter for homeMatches
+     *
+     * @param ArrayCollection $homeMatches
+     * @return self
+     */
+    public function setHomeMatches($homeMatches)
+    {
+        $this->homeMatches = $homeMatches;
+        return $this;
+    }
+
+    /**
+     * Adder for homeMatches
+     *
+     * @param Match $homeMatch
+     * @return self
+     */
+    public function addHomeMatch(Match $homeMatch)
+    {
+        if (!$this->homeMatches->contains($homeMatch)) {
+            $this->homeMatches->add($homeMatch);
+            $homeMatch->setHomePlayer($this);
+        }
+        
+        return $this;
+    }
+
+    /**
+     * Remover for homeMatches
+     *
+     * @param Match $homeMatch
+     * @return self
+     */
+    public function removeHomeMatch(Match $homeMatch)
+    {
+        if ($this->homeMatches->contains($homeMatch)) {
+            $this->homeMatches->removeElement($homeMatch);
+            $homeMatch->setHomePlayer(null);
+        }
+        
+        return $this;
+    }
+    
+    /**
+     * Getter for awayMatches
+     *
+     * @return ArrayCollection
+     */
+    public function getAwayMatches()
+    {
+        return $this->awayMatches;
+    }
+
+    /**
+     * Setter for awayMatches
+     *
+     * @param ArrayCollection $awayMatches
+     * @return self
+     */
+    public function setAwayMatches($awayMatches)
+    {
+        $this->awayMatches = $awayMatches;
+        return $this;
+    }
+
+    /**
+     * Adder for awayMatches
+     *
+     * @param Match $awayMatch
+     * @return self
+     */
+    public function addAwayMatch(Match $awayMatch)
+    {
+        if (!$this->awayMatches->contains($awayMatch)) {
+            $this->awayMatches->add($awayMatch);
+            $awayMatch->setAwayPlayer($this);
+        }
+        
+        return $this;
+    }
+
+    /**
+     * Remover for awayMatches
+     *
+     * @param Match $awayMatch
+     * @return self
+     */
+    public function removeAwayMatch(Match $awayMatch)
+    {
+        if ($this->awayMatches->contains($awayMatch)) {
+            $this->awayMatches->removeElement($awayMatch);
+            $awayMatch->setAwayPlayer(null);
+        }
+        
+        return $this;
+    }
 }

@@ -8,6 +8,7 @@ use CompetitionBundle\Model\Standing;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends Controller
 {
@@ -17,11 +18,12 @@ class DefaultController extends Controller
      * @Template
      * @return array
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $parsedMatches = [];
         /** @var Match $match */
-        $date = new \DateTime('2016-08-05');
+        $dateString = $request->get('date', date('dMY'));
+        $date = new \DateTime($dateString);
         $matches = $this->getDoctrine()->getRepository(Match::class)->findByDate($date);
         $standings = $this->parseStandings($matches);
         

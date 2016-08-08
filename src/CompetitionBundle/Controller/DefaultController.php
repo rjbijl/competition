@@ -16,6 +16,8 @@ class DefaultController extends Controller
     /**
      * @Route("/")
      * @Template
+     *
+     * @param Request $request
      * @return array
      */
     public function indexAction(Request $request)
@@ -25,16 +27,17 @@ class DefaultController extends Controller
         $dateString = $request->get('date', date('dMY'));
         $date = new \DateTime($dateString);
         $matches = $this->getDoctrine()->getRepository(Match::class)->findByDate($date);
-        $standings = $this->parseStandings($matches);
-        
+
         foreach ($this->getDoctrine()->getRepository(Match::class)->findByDate($date) as $match) {
             $parsedMatches[$match->getHomePlayer()->getId()][$match->getAwayPlayer()->getId()] = sprintf(
-                '%d - %d', $match->getHomeScore(), $match->getAwayScore()
+                '%d-%d', $match->getHomeScore(), $match->getAwayScore()
             );
         };
 
-        $players = $this->getDoctrine()->getRepository(Player::class)->findAll();
-
+        if ($request->isMethod('post')) {
+            $this->handleForm($request, $date);
+        }
+        
         return [
             'players' => $this->getDoctrine()->getRepository(Player::class)->findAll(),
             'matches' => $parsedMatches,
@@ -44,12 +47,54 @@ class DefaultController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param \DateTime $date
+     * @return bool
+     */
+    private function handleForm(Request $request, \DateTime $date)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        foreach ($request->get('result') as $homePlayerId => $result) {
+            $homePlayer = $em->find(Player::class, $homePlayerId);
+            foreach ($result as $awayPlayerId => $score) {
+                if (strlen($score) > 0) {
+                    $awayPlayer = $em->find(Player::class, $awayPlayerId);
+                    list($homeScore, $awayScore) = explode('-', $score);
+
+                    if (!$match = $em->getRepository(Match::class)->findOneBy([
+                        'date' => $date,
+                        'homePlayer' => $homePlayer,
+                        'awayPlayer' => $awayPlayer,
+                    ])) {
+                        $match = new Match();
+                        $match->setHomePlayer($homePlayer);
+                        $match->setAwayPlayer($awayPlayer);
+                        $match->setDate($date);
+                        $em->persist($match);
+                    }
+
+                    $match->setHomeScore($homeScore);
+                    $match->setAwayScore($awayScore);
+                }
+            }
+        };
+
+        try {
+            $em->flush();
+            return true;
+        } catch (\Exception $e) {
+            dump($e);die;
+        }
+    }
+
+    /**
      * Parse standings, based on an array of matches
      *
      * @param Match[] $matches
-     * return Standing[]
+     * @return Standing[]
      */
-    public function parseStandings(array $matches)
+    private function parseStandings(array $matches)
     {
         $standings = [];
         foreach ($matches as $match) {

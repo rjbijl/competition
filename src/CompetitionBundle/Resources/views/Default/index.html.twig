@@ -1,52 +1,60 @@
 {% extends '::base.html.twig' %}
 
 {% block body %}
-<h1>Scores voor {{ date.format('d-m-Y') }}</h1>
-<table style="border-collapse: collapse; cell-spa">
-    <tr>
-        <td style="border: 1px solid black; padding: 5px;"> </td>
-        {% for player in players %}
-            <td style="border: 1px solid black; padding: 5px;">{{ player.name }}</td>
-        {% endfor %}
-    </tr>
-    {% for homePlayer in players %}
-        <tr>
-            <td style="border: 1px solid black; padding: 5px;">{{ homePlayer.name }}</td>
-            {% for awayPlayer in players %}
-                <td style="border: 1px solid black; padding: 5px;">
-                    {% if homePlayer.id == awayPlayer.id %}
-                        ---
-                    {% elseif matches[homePlayer.id][awayPlayer.id] is defined %}
-                        {{ matches[homePlayer.id][awayPlayer.id] }}
-                    {% endif %}
-                </td>
+    <h1>Scores voor {{ date.format('d-m-Y') }}</h1>
+    <form method="post">
+        <table style="border-collapse: collapse; cell-spa">
+            <tr>
+                <td style="border: 1px solid black; padding: 5px;"> </td>
+                {% for player in players %}
+                    <td style="border: 1px solid black; padding: 5px;">{{ player.name }}</td>
+                {% endfor %}
+            </tr>
+            {% for homePlayer in players %}
+                <tr>
+                    <td style="border: 1px solid black; padding: 5px;">{{ homePlayer.name }}</td>
+                    {% for awayPlayer in players %}
+                        <td style="border: 1px solid black; padding: 5px;">
+                            {% if homePlayer.id == awayPlayer.id %}
+                                ---
+                            {% else  %}
+                                <input
+                                    style="width: 50px;"
+                                    type="text"
+                                    name="result[{{ homePlayer.id }}][{{ awayPlayer.id }}]"
+                                    value="{% if matches[homePlayer.id][awayPlayer.id] is defined %}{{ matches[homePlayer.id][awayPlayer.id]}}{% endif %}"
+                                >
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
             {% endfor %}
-        </tr>
-    {% endfor %}
-</table>
+        </table>
+        <input type="submit" value="Update">
+    </form>
 
-<hr>
+    <hr>
 
-<table style="border-collapse: collapse;" >
-    <tr>
-        <td style="border: 1px solid black; padding: 5px;"></td>
-        <td style="border: 1px solid black; padding: 5px;">{{ 'standings.played'|trans }}</td>
-        <td style="border: 1px solid black; padding: 5px;">{{ 'standings.won'|trans }}</td>
-        <td style="border: 1px solid black; padding: 5px;">{{ 'standings.lost'|trans }}</td>
-        <td style="border: 1px solid black; padding: 5px;">{{ 'standings.scored'|trans }}</td>
-        <td style="border: 1px solid black; padding: 5px;">{{ 'standings.conceded'|trans }}</td>
-        <td style="border: 1px solid black; padding: 5px;">{{ 'standings.goalDifference'|trans }}</td>
-    </tr>
-    {% for standing in standings %}
+    <table style="border-collapse: collapse;" >
         <tr>
-            <td style="border: 1px solid black; padding: 5px;">{{ standing.userName }}</td>
-            <td style="border: 1px solid black; padding: 5px;">{{ standing.played }}</td>
-            <td style="border: 1px solid black; padding: 5px;">{{ standing.won }}</td>
-            <td style="border: 1px solid black; padding: 5px;">{{ standing.lost }}</td>
-            <td style="border: 1px solid black; padding: 5px;">{{ standing.scored }}</td>
-            <td style="border: 1px solid black; padding: 5px;">{{ standing.conceded }}</td>
-            <td style="border: 1px solid black; padding: 5px;">{{ standing.goalDifference }}</td>
+            <td style="border: 1px solid black; padding: 5px;"></td>
+            <td style="border: 1px solid black; padding: 5px;">{{ 'standings.played'|trans }}</td>
+            <td style="border: 1px solid black; padding: 5px;">{{ 'standings.won'|trans }}</td>
+            <td style="border: 1px solid black; padding: 5px;">{{ 'standings.lost'|trans }}</td>
+            <td style="border: 1px solid black; padding: 5px;">{{ 'standings.scored'|trans }}</td>
+            <td style="border: 1px solid black; padding: 5px;">{{ 'standings.conceded'|trans }}</td>
+            <td style="border: 1px solid black; padding: 5px;">{{ 'standings.goalDifference'|trans }}</td>
         </tr>
-    {% endfor %}
-</table>
+        {% for standing in standings %}
+            <tr>
+                <td style="border: 1px solid black; padding: 5px;">{{ standing.userName }}</td>
+                <td style="border: 1px solid black; padding: 5px;">{{ standing.played }}</td>
+                <td style="border: 1px solid black; padding: 5px;">{{ standing.won }}</td>
+                <td style="border: 1px solid black; padding: 5px;">{{ standing.lost }}</td>
+                <td style="border: 1px solid black; padding: 5px;">{{ standing.scored }}</td>
+                <td style="border: 1px solid black; padding: 5px;">{{ standing.conceded }}</td>
+                <td style="border: 1px solid black; padding: 5px;">{{ standing.goalDifference }}</td>
+            </tr>
+        {% endfor %}
+    </table>
 {% endblock %}

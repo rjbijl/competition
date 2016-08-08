@@ -1,3 +1,6 @@
+{% extends '::base.html.twig' %}
+
+{% block body %}
 <h1>Scores voor {{ date.format('d-m-Y') }}</h1>
 <table style="border-collapse: collapse; cell-spa">
     <tr>
@@ -24,7 +27,16 @@
 
 <hr>
 
-<table style="border-collapse: collapse;, " >
+<table style="border-collapse: collapse;" >
+    <tr>
+        <td style="border: 1px solid black; padding: 5px;"></td>
+        <td style="border: 1px solid black; padding: 5px;">{{ 'standings.played'|trans }}</td>
+        <td style="border: 1px solid black; padding: 5px;">{{ 'standings.won'|trans }}</td>
+        <td style="border: 1px solid black; padding: 5px;">{{ 'standings.lost'|trans }}</td>
+        <td style="border: 1px solid black; padding: 5px;">{{ 'standings.scored'|trans }}</td>
+        <td style="border: 1px solid black; padding: 5px;">{{ 'standings.conceded'|trans }}</td>
+        <td style="border: 1px solid black; padding: 5px;">{{ 'standings.goalDifference'|trans }}</td>
+    </tr>
     {% for standing in standings %}
         <tr>
             <td style="border: 1px solid black; padding: 5px;">{{ standing.userName }}</td>
@@ -37,4 +49,4 @@
         </tr>
     {% endfor %}
 </table>
-
+{% endblock %}

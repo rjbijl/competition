@@ -1,0 +1,7 @@
+standings:
+  played: Gespeeld
+  won: Gewonnen
+  lost: Verloren
+  scored: Voor
+  conceded: Tegen
+  goalDifference: Saldo

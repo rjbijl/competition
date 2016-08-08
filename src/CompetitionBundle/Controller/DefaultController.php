@@ -44,9 +44,12 @@ class DefaultController extends Controller
     }
 
     /**
+     * Parse standings, based on an array of matches
+     *
      * @param Match[] $matches
+     * return Standing[]
      */
-    public function parseStandings($matches)
+    public function parseStandings(array $matches)
     {
         $standings = [];
         foreach ($matches as $match) {

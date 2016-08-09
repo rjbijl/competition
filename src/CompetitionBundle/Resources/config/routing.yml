@@ -1,0 +1,3 @@
+competition_index:
+  prefix: /
+  resource: "@CompetitionBundle/Controller/DefaultController.php"

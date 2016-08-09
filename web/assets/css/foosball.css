@@ -93,3 +93,21 @@ div.button-row {
     position: relative;
     top: 1px;
 }
+
+@media screen and (max-width: 768px) {
+    .foosball-table tr th span {
+        font-size: 0.8rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .foosball-table tr th span {
+        display: block;
+        visibility:hidden;
+    }
+    .foosball-table tr th span:first-letter {
+        visibility:visible;
+        font-size: 1rem;
+        margin-left: 40%;
+    }
+}

@@ -7,7 +7,7 @@ use CompetitionBundle\Model\Standing;
 /**
  * CompetitionBundle\Standings\Handler
  *
- * @author Robert-Jan Bijl <robert-jan@prezent.nl>
+ * @author Robert-Jan Bijl <rjbijl@gmail.com>
  */
 class Calculator
 {

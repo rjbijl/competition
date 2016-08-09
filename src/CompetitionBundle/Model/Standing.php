@@ -5,7 +5,7 @@ namespace CompetitionBundle\Model;
 /**
  * CompetitionBundle\Model\Standing
  *
- * @author Robert-Jan Bijl <robert-jan@prezent.nl>
+ * @author Robert-Jan Bijl <rjbijl@gmail.com>
  */
 class Standing
 {

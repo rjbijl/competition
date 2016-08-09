@@ -1,0 +1,7 @@
+{% for level, messages in app.session.flashbag.all %}
+    {% for message in messages %}
+        <div class="callout {{ level == 'error' ? 'alert' : level }}">
+            {{ message|trans }}
+        </div>
+    {% endfor %}
+{% endfor %}

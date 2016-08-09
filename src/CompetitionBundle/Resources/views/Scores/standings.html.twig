@@ -1,0 +1,23 @@
+<h2>Stand</h2>
+<table style="border-collapse: collapse;" >
+    <tr>
+        <td style="border: 1px solid black; padding: 5px;"></td>
+        <td style="border: 1px solid black; padding: 5px;">{{ 'standings.played'|trans }}</td>
+        <td style="border: 1px solid black; padding: 5px;">{{ 'standings.won'|trans }}</td>
+        <td style="border: 1px solid black; padding: 5px;">{{ 'standings.lost'|trans }}</td>
+        <td style="border: 1px solid black; padding: 5px;">{{ 'standings.scored'|trans }}</td>
+        <td style="border: 1px solid black; padding: 5px;">{{ 'standings.conceded'|trans }}</td>
+        <td style="border: 1px solid black; padding: 5px;">{{ 'standings.goalDifference'|trans }}</td>
+    </tr>
+    {% for standing in standings %}
+        <tr>
+            <td style="border: 1px solid black; padding: 5px;">{{ standing.userName }}</td>
+            <td style="border: 1px solid black; padding: 5px;">{{ standing.played }}</td>
+            <td style="border: 1px solid black; padding: 5px;">{{ standing.won }}</td>
+            <td style="border: 1px solid black; padding: 5px;">{{ standing.lost }}</td>
+            <td style="border: 1px solid black; padding: 5px;">{{ standing.scored }}</td>
+            <td style="border: 1px solid black; padding: 5px;">{{ standing.conceded }}</td>
+            <td style="border: 1px solid black; padding: 5px;">{{ standing.goalDifference }}</td>
+        </tr>
+    {% endfor %}
+</table>

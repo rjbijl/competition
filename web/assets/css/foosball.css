@@ -1,0 +1,95 @@
+* {
+    box-sizing: border-box;
+    font-family: Arial;
+    font-size: 1rem;
+}
+
+header h1 {
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+table {
+    border-top: 1px solid #000;
+    border-right: 1px solid #000;
+    border-spacing: 0;
+    width: 100%;
+    table-layout: fixed;
+}
+
+section {
+    margin-bottom: 20px;
+    max-width: 800px;
+}
+
+section.standings-form {
+    border-bottom: 1px solid #666;
+    padding-bottom: 20px;
+}
+
+.foosball-table tr th {
+    overflow: hidden;
+}
+
+.foosball-table tr th,
+.foosball-table tr td {
+    border-bottom: 1px solid #000;
+    border-left: 1px solid #000;
+    padding: 4px;
+}
+
+.foosball-table tr th.imposible-field,
+.foosball-table tr td.imposible-field {
+    background-color: #000;
+}
+
+.foosball-table tr th.first,
+.foosball-table tr td.first {
+    width: 120px;
+}
+
+.foosball-table tr td input {
+    border: none;
+    text-align: center;
+    width: 100%;
+}
+
+.standings-table td.value {
+    text-align: right;
+}
+.standings-table td.value.name {
+    text-align: left;
+}
+.standings-table td.value.negative {
+    color: #f00;
+}
+
+div.button-row {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.button {
+    background-color: #44c767;
+    -moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+    border: 1px solid #18ab29;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: Arial;
+    font-size: 17px;
+    padding: 16px 31px;
+    text-decoration: none;
+    text-shadow: 0px 1px 0px #2f6627;
+}
+
+.button:hover {
+    background-color: #5cbf2a;
+}
+
+.button:active {
+    position: relative;
+    top: 1px;
+}

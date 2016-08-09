@@ -9,29 +9,23 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 class ScoresController extends Controller
 {
+
     /**
-     * @Route("/{date}", defaults={"date" = null})
+     * @Route("/{date}", defaults={"date" = null}, requirements={"date" = "\d+"})
      * @Template
      * @ParamConverter("date", options={"format": "Ymd"})
-     * 
-     * @param Request $request
+     *
      * @param \DateTime $date
      * @return array
      */
-    public function indexAction(Request $request, \DateTime $date = null)
+    public function indexAction(\DateTime $date = null)
     {
         $date = $date ?: new \DateTime();
-
-        if ($request->isMethod('post')) {
-            /** @var ScoreGridHandler $formHandler */
-            $formHandler = $this->get('competition.form.handler.score_grid');
-            $formHandler->handle($request);
-        }
-
         $matches = $this->getDoctrine()->getRepository(Match::class)->findByDate($date);
 
         return [
@@ -40,6 +34,28 @@ class ScoresController extends Controller
             'standings' => $this->get('competition.standings.calculator')->calculate($matches),
             'date' => $date,
         ];
+    }
+
+    /**
+     * @Route("/save")
+     * @Template
+     *
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function saveAction(Request $request)
+    {
+        if ($request->isMethod('post')) {
+            /** @var ScoreGridHandler $formHandler */
+            $formHandler = $this->get('competition.form.handler.score_grid');
+            if ($formHandler->handle($request)) {
+                $this->addFlash('info', 'Opslaan gelukt');
+            } else {
+                $this->addFlash('info', 'Error');
+            };
+        }
+
+        return $this->redirectToRoute('competition_scores_index');
     }
 
     /**

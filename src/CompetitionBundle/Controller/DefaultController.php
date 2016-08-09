@@ -4,7 +4,7 @@ namespace CompetitionBundle\Controller;
 
 use CompetitionBundle\Entity\Match;
 use CompetitionBundle\Entity\Player;
-use CompetitionBundle\Model\Standing;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -13,18 +13,20 @@ use Symfony\Component\HttpFoundation\Request;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/")
+     * @Route("/{date}", defaults={"date" = null})
      * @Template
-     *
+     * @ParamConverter("date", options={"format": "Ymd"})
+     * 
      * @param Request $request
+     * @param null $date
      * @return array
      */
-    public function indexAction(Request $request)
+    public function indexAction(Request $request, \DateTime $date = null)
     {
+        $date = $date ?: new \DateTime();
+
         $parsedMatches = [];
         /** @var Match $match */
-        $dateString = $request->get('date', date('dMY'));
-        $date = new \DateTime($dateString);
         $matches = $this->getDoctrine()->getRepository(Match::class)->findByDate($date);
 
         foreach ($this->getDoctrine()->getRepository(Match::class)->findByDate($date) as $match) {

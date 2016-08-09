@@ -30,6 +30,7 @@
                 </tr>
             {% endfor %}
         </table>
+        <input type="hidden" name="date" value="{{ date.format('Ymd') }}">
         <input type="submit" value="Update">
     </form>
 

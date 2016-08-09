@@ -6,7 +6,10 @@
 
     <services>
 
-        <service id="competition.standings.calculator" class="CompetitionBundle\Standings\Calculator">
+        <service id="competition.standings.calculator" class="CompetitionBundle\Standings\Calculator" />
+
+        <service id="competition.form.handler.score_grid" class="CompetitionBundle\Form\Handler\ScoreGridHandler">
+            <argument type="service" id="doctrine.orm.entity_manager" />
         </service>
 
     </services>

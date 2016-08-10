@@ -28,6 +28,7 @@
             {% endfor %}
         </table>
         <div class="button-row">
+            <input type="hidden" name="round" value="{{ round.id }}">
             <input type="hidden" name="date" value="{{ date.format('Ymd') }}">
             <button type="submit" class="button submit-button">Update scores</button>
         </div>

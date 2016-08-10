@@ -1,7 +1,8 @@
 {
-    "name": "robert.jan/competition",
+    "name": "robert.jan/competition-manager",
     "license": "MIT",
     "type": "project",
+    "description": "Simple manager for round-robin based competitions",
     "autoload": {
         "psr-4": {
             "": "src/"

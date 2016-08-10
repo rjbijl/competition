@@ -1,4 +1,7 @@
-foosball
-========
+competition-manager
+===================
 
-A Symfony project created on August 8, 2016, 7:39 am.
+Simple manager for round-robin based competitions.
+
+## Setup
+To setup the application, run `setup.sh` from the application root.

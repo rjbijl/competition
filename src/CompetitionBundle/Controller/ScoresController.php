@@ -5,6 +5,7 @@ namespace CompetitionBundle\Controller;
 use CompetitionBundle\Entity\Match;
 use CompetitionBundle\Entity\Player;
 use CompetitionBundle\Form\Handler\ScoreGridHandler;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -19,6 +20,7 @@ class ScoresController extends Controller
      * @Route("/{date}", defaults={"date" = null}, requirements={"date" = "\d+"})
      * @Template
      * @ParamConverter("date", options={"format": "Ymd"})
+     * @Method({"GET"})
      *
      * @param \DateTime $date
      * @return array
@@ -39,21 +41,20 @@ class ScoresController extends Controller
     /**
      * @Route("/save")
      * @Template
+     * @Method({"POST"})
      *
      * @param Request $request
      * @return RedirectResponse
      */
     public function saveAction(Request $request)
     {
-        if ($request->isMethod('post')) {
-            /** @var ScoreGridHandler $formHandler */
-            $formHandler = $this->get('competition.form.handler.score_grid');
-            if ($formHandler->handle($request)) {
-                $this->addFlash('info', 'Opslaan gelukt');
-            } else {
-                $this->addFlash('info', 'Error');
-            };
-        }
+        /** @var ScoreGridHandler $formHandler */
+        $formHandler = $this->get('competition.form.handler.score_grid');
+        if ($formHandler->handle($request)) {
+            $this->addFlash('info', 'Opslaan gelukt');
+        } else {
+            $this->addFlash('info', 'Error');
+        };
 
         return $this->redirectToRoute('competition_scores_index');
     }

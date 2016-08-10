@@ -2,26 +2,13 @@
 
 namespace CompetitionBundle\Entity;
 
-use BloxzBundle\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use YouChoozBundle\Entity\Basic\Category;
-use YouChoozBundle\Entity\Basic\EducationLevel;
-use YouChoozBundle\Entity\Basic\EducationType;
-use YouChoozBundle\Entity\Basic\Method;
-use YouChoozBundle\Entity\Basic\Sector;
-use YouChoozBundle\Entity\Education\AdmissionCriterion;
-use YouChoozBundle\Entity\Education\Alias;
-use YouChoozBundle\Entity\Education\EducationInstituteType;
-use YouChoozBundle\Entity\Education\Page;
-use YouChoozBundle\Entity\Education\Possibility;
-use YouChoozBundle\Entity\Education\Video;
 
 /**
  * CompetitionBundle\Entity\Match
+ * @author Robert-Jan Bijl <rjbijl@gmail.com>
  *
  * @ORM\Table(name="mtch")
- * )
  * @ORM\Entity
  */
 class Match
@@ -70,7 +57,14 @@ class Match
      * @ORM\Column(name="away_score", type="integer")
      */
     private $awayScore;
-    
+
+    /**
+     * @var Round
+     * @ORM\ManyToOne(targetEntity="CompetitionBundle\Entity\Round", inversedBy="matches")
+     * @ORM\JoinColumn(name="round_id", referencedColumnName="id", onDelete="CASCADE")
+     */
+    private $round;
+
     /**
      * Getter for id
      *
@@ -206,6 +200,36 @@ class Match
     public function setAwayScore($awayScore)
     {
         $this->awayScore = $awayScore;
+        return $this;
+    }
+
+    /**
+     * Getter for round
+     *
+     * @return Round
+     */
+    public function getRound()
+    {
+        return $this->round;
+    }
+
+    /**
+     * Setter for round
+     *
+     * @param Round $round
+     * @return self
+     */
+    public function setRound($round = null)
+    {
+        if ($this->round !== $round) {
+            $this->round = $round;
+            if (null === $round) {
+                $round->removeMatch($this);
+            } else {
+                $round->addMatch($this);
+            }
+        };
+
         return $this;
     }
 }

@@ -13,9 +13,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class ScoresController
+ *
+ * @author Robert-Jan Bijl <rjbijl@gmail.com>
+ */
 class ScoresController extends Controller
 {
-
     /**
      * @Route("/{date}", defaults={"date" = null}, requirements={"date" = "\d+"})
      * @Template

@@ -1,32 +1,35 @@
-<h2>Uitslagen</h2>
-<form method="post" action="{{ path('competition_scores_save') }}">
-    <table style="border-collapse: collapse; cell-spa">
-        <tr>
-            <td style="border: 1px solid black; padding: 5px;"> </td>
-            {% for player in players %}
-                <td style="border: 1px solid black; padding: 5px;">{{ player.name }}</td>
-            {% endfor %}
-        </tr>
-        {% for homePlayer in players %}
+<section class="standings-form">
+    <header><h1>Uitslagen voor {{ date.format('d-m-Y') }}</h1></header>
+    <form method="post" action="{{ path('competition_scores_save') }}" class="standings-form">
+        <table class="foosball-table form-table">
             <tr>
-                <td style="border: 1px solid black; padding: 5px;">{{ homePlayer.name }}</td>
-                {% for awayPlayer in players %}
-                    <td style="border: 1px solid black; padding: 5px;">
-                        {% if homePlayer.id == awayPlayer.id %}
-                            ---
-                        {% else  %}
-                            <input
-                                style="width: 50px;"
-                                type="text"
-                                name="result[{{ homePlayer.id }}][{{ awayPlayer.id }}]"
-                                value="{% if matches[homePlayer.id][awayPlayer.id] is defined %}{{ matches[homePlayer.id][awayPlayer.id]}}{% endif %}"
-                            >
-                        {% endif %}
-                    </td>
+                <th class="table-head first empty"></th>
+                {% for player in players %}
+                    <th class="table-head username">{{ player.name }}</th>
                 {% endfor %}
             </tr>
-        {% endfor %}
-    </table>
-    <input type="hidden" name="date" value="{{ date.format('Ymd') }}">
-    <input type="submit" value="Update">
-</form>
+            {% for homePlayer in players %}
+                <tr>
+                    <td>{{ homePlayer.name }}</td>
+                    {% for awayPlayer in players %}
+                        {% if homePlayer.id == awayPlayer.id %}
+                            <td class="imposible-field">&nbsp;</td>
+                        {% else %}
+                            <td class="score-field">
+                                <input
+                                        type="text"
+                                        name="result[{{ homePlayer.id }}][{{ awayPlayer.id }}]"
+                                        value="{% if matches[homePlayer.id][awayPlayer.id] is defined %}{{ matches[homePlayer.id][awayPlayer.id] }}{% endif %}"
+                                >
+                            </td>
+                        {% endif %}
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </table>
+        <div class="button-row">
+            <input type="hidden" name="date" value="{{ date.format('Ymd') }}">
+            <button type="submit" class="button submit-button">Update scores</button>
+        </div>
+    </form>
+</section>

@@ -1,12 +1,15 @@
 {% extends '::base.html.twig' %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="/assets/css/foosball.css" type="text/css" media="screen">
+{% endblock %}
+
 {% block body %}
 
     {% include 'CompetitionBundle:partials:flashes.html.twig' %}
 
-    <h1>{{ date.format('d-m-Y') }}</h1>
     {% include 'CompetitionBundle:Scores:scoreGrid.html.twig' %}
-    <hr>
+
     {% include 'CompetitionBundle:Scores:standings.html.twig' %}
 
 {% endblock %}

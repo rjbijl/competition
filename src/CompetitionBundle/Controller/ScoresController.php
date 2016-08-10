@@ -4,6 +4,7 @@ namespace CompetitionBundle\Controller;
 
 use CompetitionBundle\Entity\Match;
 use CompetitionBundle\Entity\Player;
+use CompetitionBundle\Entity\Round;
 use CompetitionBundle\Form\Handler\ScoreGridHandler;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -21,24 +22,32 @@ use Symfony\Component\HttpFoundation\Request;
 class ScoresController extends Controller
 {
     /**
-     * @Route("/{date}", defaults={"date" = null}, requirements={"date" = "\d+"})
+     * @Route("/{round}", defaults={"round" = null}, requirements={"round" = "\d+"})
      * @Template
-     * @ParamConverter("date", options={"format": "Ymd"})
      * @Method({"GET"})
      *
      * @param \DateTime $date
      * @return array
      */
-    public function indexAction(\DateTime $date = null)
+    public function indexAction($date = null)
     {
-        $date = $date ?: new \DateTime();
-        $matches = $this->getDoctrine()->getRepository(Match::class)->findByDate($date);
+        $date = $date ?: date('Ymd');
+
+        if (!$round = $this->getDoctrine()->getRepository(Round::class)->findOneByName($date)) {
+            $round = new Round();
+            $round->setName($date);
+
+            foreach ($this->getDoctrine()->getRepository(Player::class)->findAll() as $player) {
+                $round->addPlayer($player);
+            }
+        }
 
         return [
-            'players' => $this->getDoctrine()->getRepository(Player::class)->findAll(),
-            'matches' => $this->parseMatchesForGrid($matches),
-            'standings' => $this->get('competition.standings.calculator')->calculate($matches),
-            'date' => $date,
+            'round' => $round,
+            'players' => $round->getPlayers(),
+            'matches' => $this->parseMatchesForGrid($round),
+            'standings' => $this->get('competition.standings.calculator')->calculate($round),
+            'date' => new \DateTime($date),
         ];
     }
 
@@ -69,12 +78,12 @@ class ScoresController extends Controller
      * @param array $matches
      * @return array
      */
-    private function parseMatchesForGrid(array $matches = [])
+    private function parseMatchesForGrid(Round $round)
     {
         $parsedMatches = [];
 
         /** @var Match $match */
-        foreach ($matches as $match) {
+        foreach ($round->getMatches() as $match) {
             $parsedMatches[$match->getHomePlayer()->getId()][$match->getAwayPlayer()->getId()] = sprintf(
                 '%d-%d', $match->getHomeScore(), $match->getAwayScore()
             );

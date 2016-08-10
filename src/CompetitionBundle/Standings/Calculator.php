@@ -1,7 +1,8 @@
 <?php
 
 namespace CompetitionBundle\Standings;
-use CompetitionBundle\Entity\Match;
+
+use CompetitionBundle\Entity\Round;
 use CompetitionBundle\Model\Standing;
 
 /**
@@ -12,38 +13,25 @@ use CompetitionBundle\Model\Standing;
 class Calculator
 {
     /**
-     * @param Match[] $matches
+     * @param Round $round
      * @return array
      */
-    public function calculate(array $matches = [])
+    public function calculate(Round $round)
     {
-        $standings = [];
-        foreach ($matches as $match) {
+        $standings = $this->initializeStandings($round);
+
+        foreach ($round->getMatches() as $match) {
             $winner = $match->getHomeScore() > $match->getAwayScore() ? $match->getHomePlayer() : $match->getAwayPlayer();
             $loser = $match->getHomeScore() > $match->getAwayScore() ? $match->getAwayPlayer() : $match->getHomePlayer();
 
-            if (!isset($standings[$winner->getId()])) {
-                $standing = new Standing();
-                $standing->userName = $winner->getName();
-                $standings[$winner->getId()] = $standing;
-            } else{
-                $standing = $standings[$winner->getId()];
-            }
-
+            $standing = $standings[$winner->getId()];
             $standing->played += 1;
             $standing->won += 1;
             $standing->scored += max($match->getHomeScore(), $match->getAwayScore());
             $standing->conceded += min($match->getHomeScore(), $match->getAwayScore());
             $standing->goalDifference = $standing->scored - $standing->conceded;
 
-            if (!isset($standings[$loser->getId()])) {
-                $standing = new Standing();
-                $standing->userName = $loser->getName();
-                $standings[$loser->getId()] = $standing;
-            } else{
-                $standing = $standings[$loser->getId()];
-            }
-
+            $standing = $standings[$loser->getId()];
             $standing->played += 1;
             $standing->lost += 1;
             $standing->scored += min($match->getHomeScore(), $match->getAwayScore());
@@ -52,6 +40,24 @@ class Calculator
         }
 
         uasort($standings, [$this, 'sortStandings']);
+
+        return $standings;
+    }
+
+    /**
+     * Create an empty standings table
+     *
+     * @param Round $round
+     * @return array
+     */
+    private function initializeStandings(Round $round)
+    {
+        $standings = [];
+        foreach ($round->getPlayers() as $player) {
+            $standing = new Standing();
+            $standing->userName = $player->getName();
+            $standings[$player->getId()] = $standing;
+        }
 
         return $standings;
     }

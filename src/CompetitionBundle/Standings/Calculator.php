@@ -56,6 +56,13 @@ class Calculator
         return $standings;
     }
 
+    /**
+     * Sort standing lines
+     *
+     * @param Standing $a
+     * @param Standing $b
+     * @return int
+     */
     private function sortStandings(Standing $a, Standing $b)
     {
         if ($a->won != $b->won) {

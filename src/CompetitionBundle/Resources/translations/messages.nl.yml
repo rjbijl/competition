@@ -5,3 +5,10 @@ standings:
   scored: Voor
   conceded: Tegen
   goalDifference: Saldo
+
+form:
+  round:
+    name: Naam
+    players: Spelers
+    create: Start een nieuwe ronde
+    update: Update de ronde

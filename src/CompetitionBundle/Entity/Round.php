@@ -4,7 +4,7 @@ namespace CompetitionBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * CompetitionBundle\Entity\Round
@@ -12,6 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @author Robert-Jan Bijl <rjbijl@gmail.com>
  * @ORM\Table(name="rnd")
  * @ORM\Entity
+ * @UniqueEntity("name")
  */
 class Round
 {
@@ -27,7 +28,7 @@ class Round
     /**
      * @var string
      *
-     * @ORM\Column(name="name", type="string")
+     * @ORM\Column(name="name", type="string", unique=true)
      */
     private $name;
 

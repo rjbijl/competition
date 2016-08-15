@@ -4,6 +4,7 @@ namespace CompetitionBundle\Form\Handler;
 
 use CompetitionBundle\Entity\Match;
 use CompetitionBundle\Entity\Player;
+use CompetitionBundle\Entity\Round;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -38,6 +39,10 @@ class ScoreGridHandler
      */
     public function handle(Request $request)
     {
+        if (!$round = $this->entityManager->find(Round::class, $request->get('round', null))) {
+            $this->error = 'Invalid round';
+            return false;
+        };
         $date = new \DateTime($request->get('date', null));
 
         foreach ($request->get('result') as $homePlayerId => $result) {
@@ -48,15 +53,16 @@ class ScoreGridHandler
                     list($homeScore, $awayScore) = $this->parseScoreString($score);
 
                     if (!$match = $this->entityManager->getRepository(Match::class)->findOneBy([
-                        'date' => $date,
+                        'round' => $round,
                         'homePlayer' => $homePlayer,
                         'awayPlayer' => $awayPlayer,
                     ])) {
-                        $match = $this->createNewMatch($homePlayer, $awayPlayer, $date);
+                        $match = $this->createNewMatch($round, $homePlayer, $awayPlayer, $date);
                     }
 
                     $match->setHomeScore($homeScore);
                     $match->setAwayScore($awayScore);
+                    $match->setRound($round);
                 }
             }
         };
@@ -82,16 +88,18 @@ class ScoreGridHandler
     }
 
     /**
+     * @param Round $round
      * @param Player $homePlayer
      * @param Player $awayPlayer
      * @param \DateTime $date
      * @return Match
      */
-    private function createNewMatch(Player $homePlayer, Player $awayPlayer, \DateTime $date)
+    private function createNewMatch(Round $round, Player $homePlayer, Player $awayPlayer, \DateTime $date)
     {
         $match = new Match();
         $match->setHomePlayer($homePlayer);
         $match->setAwayPlayer($awayPlayer);
+        $match->setRound($round);
         $match->setDate($date);
         $this->entityManager->persist($match);
 

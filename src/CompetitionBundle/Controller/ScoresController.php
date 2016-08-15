@@ -3,11 +3,10 @@
 namespace CompetitionBundle\Controller;
 
 use CompetitionBundle\Entity\Match;
-use CompetitionBundle\Entity\Player;
 use CompetitionBundle\Entity\Round;
 use CompetitionBundle\Form\Handler\ScoreGridHandler;
+use CompetitionBundle\Form\Type\RoundType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -26,47 +25,56 @@ class ScoresController extends Controller
      * @Template
      * @Method({"GET"})
      *
-     * @param \DateTime $date
+     * @param string $round
      * @return array
      */
-    public function indexAction($date = null)
+    public function indexAction($round = null)
     {
-        $date = $date ?: date('Ymd');
+        $date = $round ?: date('Ymd');
 
+        $existing = true;
         if (!$round = $this->getDoctrine()->getRepository(Round::class)->findOneByName($date)) {
+            $existing = false;
             $round = new Round();
             $round->setName($date);
-
-            foreach ($this->getDoctrine()->getRepository(Player::class)->findAll() as $player) {
-                $round->addPlayer($player);
-            }
         }
+
+        $roundForm = $this->createForm(
+            RoundType::class,
+            $round,
+            [
+                'create' => !$existing,
+                'action' => $existing
+                    ? $this->get('router')->generate('competition_round_edit', ['round' => $round->getId()])
+                    : $this->get('router')->generate('competition_round_create'),
+            ]
+        );
 
         return [
             'round' => $round,
-            'players' => $round->getPlayers(),
             'matches' => $this->parseMatchesForGrid($round),
             'standings' => $this->get('competition.standings.calculator')->calculate($round),
             'date' => new \DateTime($date),
+            'roundForm' => $roundForm->createView(),
         ];
     }
 
     /**
-     * @Route("/save")
+     * @Route("/save-scores")
      * @Template
      * @Method({"POST"})
      *
      * @param Request $request
      * @return RedirectResponse
      */
-    public function saveAction(Request $request)
+    public function saveScoresAction(Request $request)
     {
         /** @var ScoreGridHandler $formHandler */
         $formHandler = $this->get('competition.form.handler.score_grid');
         if ($formHandler->handle($request)) {
             $this->addFlash('info', 'Opslaan gelukt');
         } else {
-            $this->addFlash('info', 'Error');
+            $this->addFlash('error', 'Error');
         };
 
         return $this->redirectToRoute('competition_scores_index');
@@ -75,7 +83,7 @@ class ScoresController extends Controller
     /**
      * Parse match so they can be easily rendered in the grid
      *
-     * @param array $matches
+     * @param Round $round
      * @return array
      */
     private function parseMatchesForGrid(Round $round)

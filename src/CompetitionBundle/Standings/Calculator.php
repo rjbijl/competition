@@ -80,7 +80,7 @@ class Calculator
         } elseif ($a->scored != $b->scored) {
             return $a->scored > $b->scored ? -1 : 1;
         } else {
-            return $a->userName > $b->userName ? -1 : 1;
+            return $a->userName < $b->userName ? -1 : 1;
         }
     }
 }

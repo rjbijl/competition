@@ -40,6 +40,9 @@ class RoundType extends AbstractType
             ])
             ->add('submit', SubmitType::class, [
                 'label' => $options['create'] ? 'form.round.create' : 'form.round.update',
+                'attr' => [
+                    'class' => 'button',
+                ]
             ])
         ;
     }

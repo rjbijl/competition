@@ -17,11 +17,15 @@ table {
     table-layout: fixed;
 }
 
-section {
-    margin-bottom: 20px;
+main {
     max-width: 800px;
 }
 
+section {
+    margin-bottom: 20px;
+}
+
+section.standings-table,
 section.standings-form {
     border-bottom: 1px solid #666;
     padding-bottom: 20px;

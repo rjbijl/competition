@@ -5,15 +5,17 @@
 {% endblock %}
 
 {% block body %}
-    <header><h1>Ronde {{ date.format('d-m-Y') }}</h1></header>
+    <main>
+        <header><h1>Ronde {{ date.format('d-m-Y') }}</h1></header>
 
-    {% include 'CompetitionBundle:partials:flashes.html.twig' %}
+        {% include 'CompetitionBundle:partials:flashes.html.twig' %}
 
-    {% if round.id %}
-        {% include 'CompetitionBundle:Scores:scoreGrid.html.twig' with {'players': round.players} %}
+        {% if round.id %}
+            {% include 'CompetitionBundle:Scores:scoreGrid.html.twig' with {'players': round.players} %}
 
-        {% include 'CompetitionBundle:Scores:standings.html.twig' %}
-    {% endif %}
+            {% include 'CompetitionBundle:Scores:standings.html.twig' %}
+        {% endif %}
 
-    {% include 'CompetitionBundle:Scores:roundForm.html.twig' with {'form': roundForm} %}
+        {% include 'CompetitionBundle:Scores:roundForm.html.twig' with {'form': roundForm} %}
+    </main>
 {% endblock %}

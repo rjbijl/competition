@@ -1,3 +1,7 @@
 competition_scores:
   prefix: /
   resource: "@CompetitionBundle/Controller/ScoresController.php"
+
+competition_round:
+  prefix: /round
+  resource: "@CompetitionBundle/Controller/RoundController.php"

@@ -2,26 +2,14 @@
 
 namespace CompetitionBundle\Entity;
 
-use BloxzBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use YouChoozBundle\Entity\Basic\Category;
-use YouChoozBundle\Entity\Basic\EducationLevel;
-use YouChoozBundle\Entity\Basic\EducationType;
-use YouChoozBundle\Entity\Basic\Method;
-use YouChoozBundle\Entity\Basic\Sector;
-use YouChoozBundle\Entity\Education\AdmissionCriterion;
-use YouChoozBundle\Entity\Education\Alias;
-use YouChoozBundle\Entity\Education\EducationInstituteType;
-use YouChoozBundle\Entity\Education\Page;
-use YouChoozBundle\Entity\Education\Possibility;
-use YouChoozBundle\Entity\Education\Video;
 
 /**
  * CompetitionBundle\Entity\Player
+ * @author Robert-Jan Bijl <rjbijl@gmail.com>
  *
  * @ORM\Table(name="player")
- * )
  * @ORM\Entity
  */
 class Player
@@ -53,6 +41,22 @@ class Player
      * @ORM\OneToMany(targetEntity="CompetitionBundle\Entity\Match", mappedBy="awayPlayer")
      */
     private $awayMatches;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\ManyToMany(targetEntity="CompetitionBundle\Entity\Round", mappedBy="players")
+     */
+    private $rounds;
+
+    /**
+     * Player constructor.
+     */
+    public function __construct()
+    {
+        $this->homeMatches = new ArrayCollection();
+        $this->awayMatches = new ArrayCollection();
+        $this->rounds = new ArrayCollection();
+    }
 
     /**
      * Getter for id
@@ -102,7 +106,7 @@ class Player
      * @param ArrayCollection $homeMatches
      * @return self
      */
-    public function setHomeMatches($homeMatches)
+    public function setHomeMatches(ArrayCollection $homeMatches)
     {
         $this->homeMatches = $homeMatches;
         return $this;
@@ -156,7 +160,7 @@ class Player
      * @param ArrayCollection $awayMatches
      * @return self
      */
-    public function setAwayMatches($awayMatches)
+    public function setAwayMatches(ArrayCollection $awayMatches)
     {
         $this->awayMatches = $awayMatches;
         return $this;
@@ -191,6 +195,60 @@ class Player
             $awayMatch->setAwayPlayer(null);
         }
         
+        return $this;
+    }
+
+    /**
+     * Getter for rounds
+     *
+     * @return ArrayCollection
+     */
+    public function getRounds()
+    {
+        return $this->rounds;
+    }
+
+    /**
+     * Setter for rounds
+     *
+     * @param ArrayCollection $rounds
+     * @return self
+     */
+    public function setRounds(ArrayCollection $rounds)
+    {
+        $this->rounds = $rounds;
+        return $this;
+    }
+
+    /**
+     * Adder for rounds
+     *
+     * @param Round $round
+     * @return self
+     */
+    public function addRound(Round $round)
+    {
+        if (!$this->rounds->contains($round)) {
+            $this->rounds->add($round);
+            $round->addPlayer($this);
+        };
+
+        return $this;
+    }
+
+    /**
+     * Remover for rounds
+     *
+     * @param Round $round
+     * @return self
+     */
+    public function removeRound(Round $round)
+    {
+        if ($this->rounds->contains($round)) {
+            $this->rounds->removeElement($round);
+            $round->removePlayer($this);
+        };
+
         return $this;
     }
 }

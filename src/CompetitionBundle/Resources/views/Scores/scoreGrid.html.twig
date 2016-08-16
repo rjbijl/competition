@@ -1,6 +1,6 @@
 <section class="standings-form">
-    <header><h1>Uitslagen voor {{ date.format('d-m-Y') }}</h1></header>
-    <form method="post" action="{{ path('competition_scores_save') }}" class="standings-form">
+    <header><h1>Uitslagen</h1></header>
+    <form method="post" action="{{ path('competition_scores_savescores') }}" class="standings-form">
         <table class="foosball-table form-table">
             <tr>
                 <th class="table-head first empty"></th>
@@ -17,9 +17,9 @@
                         {% else %}
                             <td class="score-field">
                                 <input
-                                        type="text"
-                                        name="result[{{ homePlayer.id }}][{{ awayPlayer.id }}]"
-                                        value="{% if matches[homePlayer.id][awayPlayer.id] is defined %}{{ matches[homePlayer.id][awayPlayer.id] }}{% endif %}"
+                                    type="text"
+                                    name="result[{{ homePlayer.id }}][{{ awayPlayer.id }}]"
+                                    value="{% if matches[homePlayer.id][awayPlayer.id] is defined %}{{ matches[homePlayer.id][awayPlayer.id] }}{% endif %}"
                                 >
                             </td>
                         {% endif %}
@@ -28,6 +28,7 @@
             {% endfor %}
         </table>
         <div class="button-row">
+            <input type="hidden" name="round" value="{{ round.id }}">
             <input type="hidden" name="date" value="{{ date.format('Ymd') }}">
             <button type="submit" class="button submit-button">Update scores</button>
         </div>

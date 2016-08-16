@@ -3,57 +3,78 @@
 namespace CompetitionBundle\Controller;
 
 use CompetitionBundle\Entity\Match;
-use CompetitionBundle\Entity\Player;
+use CompetitionBundle\Entity\Round;
 use CompetitionBundle\Form\Handler\ScoreGridHandler;
+use CompetitionBundle\Form\Type\RoundType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Class ScoresController
+ *
+ * @author Robert-Jan Bijl <rjbijl@gmail.com>
+ */
 class ScoresController extends Controller
 {
-
     /**
-     * @Route("/{date}", defaults={"date" = null}, requirements={"date" = "\d+"})
+     * @Route("/{round}", defaults={"round" = null}, requirements={"round" = "\d+"})
      * @Template
-     * @ParamConverter("date", options={"format": "Ymd"})
      * @Method({"GET"})
      *
-     * @param \DateTime $date
+     * @param string $round
      * @return array
      */
-    public function indexAction(\DateTime $date = null)
+    public function indexAction($round = null)
     {
-        $date = $date ?: new \DateTime();
-        $matches = $this->getDoctrine()->getRepository(Match::class)->findByDate($date);
+        $date = $round ?: date('Ymd');
+
+        $existing = true;
+        if (!$round = $this->getDoctrine()->getRepository(Round::class)->findOneByName($date)) {
+            $existing = false;
+            $round = new Round();
+            $round->setName($date);
+        }
+
+        $roundForm = $this->createForm(
+            RoundType::class,
+            $round,
+            [
+                'create' => !$existing,
+                'action' => $existing
+                    ? $this->get('router')->generate('competition_round_edit', ['round' => $round->getId()])
+                    : $this->get('router')->generate('competition_round_create'),
+            ]
+        );
 
         return [
-            'players' => $this->getDoctrine()->getRepository(Player::class)->findAll(),
-            'matches' => $this->parseMatchesForGrid($matches),
-            'standings' => $this->get('competition.standings.calculator')->calculate($matches),
-            'date' => $date,
+            'round' => $round,
+            'matches' => $this->parseMatchesForGrid($round),
+            'standings' => $this->get('competition.standings.calculator')->calculate($round),
+            'date' => new \DateTime($date),
+            'roundForm' => $roundForm->createView(),
         ];
     }
 
     /**
-     * @Route("/save")
+     * @Route("/save-scores")
      * @Template
      * @Method({"POST"})
      *
      * @param Request $request
      * @return RedirectResponse
      */
-    public function saveAction(Request $request)
+    public function saveScoresAction(Request $request)
     {
         /** @var ScoreGridHandler $formHandler */
         $formHandler = $this->get('competition.form.handler.score_grid');
         if ($formHandler->handle($request)) {
             $this->addFlash('info', 'Opslaan gelukt');
         } else {
-            $this->addFlash('info', 'Error');
+            $this->addFlash('error', 'Error');
         };
 
         return $this->redirectToRoute('competition_scores_index');
@@ -62,15 +83,15 @@ class ScoresController extends Controller
     /**
      * Parse match so they can be easily rendered in the grid
      *
-     * @param array $matches
+     * @param Round $round
      * @return array
      */
-    private function parseMatchesForGrid(array $matches = [])
+    private function parseMatchesForGrid(Round $round)
     {
         $parsedMatches = [];
 
         /** @var Match $match */
-        foreach ($matches as $match) {
+        foreach ($round->getMatches() as $match) {
             $parsedMatches[$match->getHomePlayer()->getId()][$match->getAwayPlayer()->getId()] = sprintf(
                 '%d-%d', $match->getHomeScore(), $match->getAwayScore()
             );

@@ -22,7 +22,6 @@ class RoundType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id', HiddenType::class)
             ->add('name', HiddenType::class, [
                 'label' => 'form.round.name',
             ])

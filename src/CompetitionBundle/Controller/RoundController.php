@@ -62,9 +62,9 @@ class RoundController extends Controller
             $em = $this->getDoctrine()->getManagerForClass(Round::class);
             $em->persist($round);
             $em->flush($round);
-            $this->addFlash('info', 'Round opgeslagen');
+            $this->addFlash('info', 'round.form.save.success');
         } else {
-            $this->addFlash('error', 'Round kon niet opgeslagen worden');
+            $this->addFlash('error', 'round.form.save.error');
             dump($roundForm->getErrors(true));die;
         }
 

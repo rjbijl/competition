@@ -23,10 +23,10 @@ class RoundType extends AbstractType
     {
         $builder
             ->add('name', HiddenType::class, [
-                'label' => 'form.round.name',
+                'label' => 'round.form.name',
             ])
             ->add('players', EntityType::class, [
-                'label' => 'form.round.players',
+                'label' => 'round.form.players',
                 'class' => Player::class,
                 'multiple' => true,
                 'expanded' => true,
@@ -36,9 +36,12 @@ class RoundType extends AbstractType
                         ->orderBy('p.name', 'ASC');
                 },
                 'required' => true,
+                'attr' => [
+                    'class' => 'multiselect',
+                ],
             ])
             ->add('submit', SubmitType::class, [
-                'label' => $options['create'] ? 'form.round.create' : 'form.round.update',
+                'label' => $options['create'] ? 'round.form.create' : 'round.form.update',
                 'attr' => [
                     'class' => 'button',
                 ]

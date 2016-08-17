@@ -72,9 +72,9 @@ class ScoresController extends Controller
         /** @var ScoreGridHandler $formHandler */
         $formHandler = $this->get('competition.form.handler.score_grid');
         if ($formHandler->handle($request)) {
-            $this->addFlash('info', 'Opslaan gelukt');
+            $this->addFlash('info', 'scores.form.save.success');
         } else {
-            $this->addFlash('error', 'Error');
+            $this->addFlash('error', 'scores.form.save.error');
         };
 
         return $this->redirectToRoute('competition_scores_index');

@@ -26,7 +26,7 @@ section {
 }
 
 section.standings-table,
-section.standings-form {
+section.scores-form {
     border-bottom: 1px solid #666;
     padding-bottom: 20px;
 }
@@ -68,6 +68,7 @@ section.standings-form {
     color: #f00;
 }
 
+/* -- Form -- */
 div.button-row {
     text-align: center;
     margin-top: 10px;
@@ -97,6 +98,47 @@ div.button-row {
     position: relative;
     top: 1px;
 }
+
+.multiselect {
+    margin-bottom: 1rem;
+}
+
+.multiselect::before,
+.multiselect::after {
+     content: ' ';
+     display: table;
+}
+
+.multiselect::after {
+     clear: both;
+ }
+
+.multiselect input {
+    float: left;
+    clear: left;
+}
+
+.multiselect label {
+    float: left;
+}
+/* -- /Form -- */
+
+/* -- Callout -- */
+.callout {
+    padding: 10px;
+    border: 1px solid black;
+    margin-bottom: 10px;
+}
+
+.callout.info {
+    background: rgba(68, 199, 103, 0.6);
+}
+
+.callout.alert {
+    background: rgba(255, 0, 0, 0.6);
+    color: #FFFFFF;
+}
+/* -- /Callout -- */
 
 @media screen and (max-width: 768px) {
     .foosball-table tr th span {

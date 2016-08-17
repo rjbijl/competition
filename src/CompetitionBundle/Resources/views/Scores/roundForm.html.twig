@@ -1,4 +1,9 @@
 <section class="round-form">
-    <header><h1>Ronde Configuratie</h1></header>
-    {{ form(form) }}
+    <header><h1>{{ 'round.form.title'|trans }}</h1></header>
+    {{ form_start(form) }}
+    {{ form_row(form.players) }}
+    <div class="button-row">
+        {{ form_row(form.submit) }}
+    </div>
+    {{ form_end(form) }}
 </section>

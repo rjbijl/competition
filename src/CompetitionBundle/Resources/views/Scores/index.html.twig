@@ -6,7 +6,7 @@
 
 {% block body %}
     <main>
-        <header><h1>Ronde {{ date.format('d-m-Y') }}</h1></header>
+        <header><h1>{{ 'round.title'|trans({'%roundName%' : round.name}) }}</h1></header>
 
         {% include 'CompetitionBundle:partials:flashes.html.twig' %}
 

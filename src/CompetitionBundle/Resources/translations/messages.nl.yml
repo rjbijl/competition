@@ -1,4 +1,17 @@
+round:
+  title: Ronde %roundName%
+  form:
+    title: Ronde configuratie
+    name: Naam
+    players: Spelers
+    create: Start een nieuwe ronde
+    update: Update de ronde
+    save:
+      success: De ronde is opgeslagen
+      error: De ronde kon niet opgeslagen worden
+
 standings:
+  title: Stand
   played: Gespeeld
   won: Gewonnen
   lost: Verloren
@@ -6,9 +19,9 @@ standings:
   conceded: Tegen
   goalDifference: Saldo
 
-form:
-  round:
-    name: Naam
-    players: Spelers
-    create: Start een nieuwe ronde
-    update: Update de ronde
+scores:
+  title: Uitslagen
+  form:
+    save:
+      success: De scores zijn bijgewerkt
+      error: De scores konden niet bijgewerkt worden

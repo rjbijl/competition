@@ -1,6 +1,6 @@
 <section class="scores-form">
     <header><h1>{{ 'scores.title'|trans }}</h1></header>
-    <form method="post" action="{{ path('competition_scores_savescores') }}" class="standings-form">
+    <form method="post" action="{{ path('competition_scores_savescores', {'round': round.id}) }}" class="standings-form">
         <table class="foosball-table form-table">
             <tr>
                 <th class="table-head first empty"></th>

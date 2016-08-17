@@ -60,14 +60,15 @@ class ScoresController extends Controller
     }
 
     /**
-     * @Route("/save-scores")
+     * @Route("/{round}/save-scores")
      * @Template
      * @Method({"POST"})
      *
      * @param Request $request
+     * @param Round $round
      * @return RedirectResponse
      */
-    public function saveScoresAction(Request $request)
+    public function saveScoresAction(Request $request, Round $round)
     {
         /** @var ScoreGridHandler $formHandler */
         $formHandler = $this->get('competition.form.handler.score_grid');
@@ -77,7 +78,7 @@ class ScoresController extends Controller
             $this->addFlash('error', 'scores.form.save.error');
         };
 
-        return $this->redirectToRoute('competition_scores_index');
+        return $this->redirectToRoute('competition_scores_index', ['round' => $round->getName()]);
     }
 
     /**
